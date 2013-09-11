@@ -1,0 +1,86 @@
+<html>
+<head>
+    <title>Genetic Soylent</title>
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+
+        <script type="text/javascript" src="GeneticSoylent.js"></script>
+        <script type="text/javascript" src="Recipe.js"></script>
+        <script type="text/javascript" src="app.js"></script>
+
+        <h1>Genetic Soylent</h1>
+        <div id="table"></div>
+
+        <form class="form-inline pull-right">
+            <label>Population:</label>
+            <input class="population form-control input-sm" type="text" style="width: 50px; text-align: center" value="100" />
+            <label style="margin-left: 20px;">Mutation probability:</label>
+            <input class="mutation-probability form-control" type="text" style="text-align: center; width: 50px" value="0.5" />
+            <label style="margin-left: 20px;">Mutation multiplier:</label>
+            <input class="mutation-multiplier form-control" type="text" style="text-align: center; width: 50px" value="0.1" />
+            <label style="margin-left: 20px;">Death rate:</label>
+            <input class="death-rate form-control input-sm" type="text" style="width: 50px; text-align: center" value="0.3" />
+        </form>
+
+        <form class="form-inline">
+            <label>Generation:</label>
+            <input class="generation form-control input-sm" type="text" style="width: 50px; text-align: center; margin-right: 20px; margin-left: 10px" />
+            <a class="btn btn-primary start-genetic-algorithm" href="#"><i class="icon-play"></i></a>
+            <a class="btn btn-primary pause-genetic-algorithm" href="#" style="display: none;"><i class="icon-pause"></i></a>
+            <a class="btn btn-default step-genetic-algorithm" href="#"><i class="icon-step-forward"></i></a>
+            <a class="btn btn-default reset-genetic-algorithm" href="#"><i class="icon-refresh"></i></a>
+        </form>
+
+        <h2>What is this?</h2>
+        <p>Genetic Soylent is an attempt to automatically create a Soylent recipe given a list of ingredients and a target nutrient profile.</p>
+        <p>You can play with it by pressing <i class="icon-step-forward"></i> to step to the next generation, <i class="icon-play"></i> to step to next generations automatically and <i class="icon-refresh"></i> to reset the simulation.</p>
+        <p>Find the code at <a href="http://github.com/nick/genetic-soylent">http://github.com/nick/genetic-soylent</a></p>
+        <h2>How it works</h2>
+        <ul>
+            <li>Generate 100 recipes, each recipe containing a random amount of each ingredient.</li>
+            <li>Score each recipe based on how close all the nutrients are to 100%.</li>
+            <li>Sort the recipes from best to worst.</li>
+            <li>Show the best one in the table above.</li>
+        </ul>
+        <p>On each subsequent 'generation', the following happens:</p>
+        <ul>
+            <li>Remove the worst 30 recipes from the list</li>
+            <li>Create 30 new Child recipes containing ingredient amounts taken from two randomly selected Parent recipes.</li>
+            <li>Ingredient amounts in each Child can also be mutated if the 'mutation probability' is met.</li>
+            <li>A mutation works by taking a random ingredient and increasing or decreasing the amount defined by the 'mutation multiplier'. For example, a mutation multiplier of 0.1 will increase or decrease the amount of an ingredient by 10%.</li>
+            <li>Finally, we re-calculate the scores for each recipe, sort them, and show the best one in the table.</li>
+        </ul>
+
+    </div>
+
+    <script type="text/javascript">
+
+        var ingredients = [
+            { name: 'Brown Sugar',  calories: 281, carbs: 73, protein: 0,  fat: 0,  maxAmount: 8  },
+            { name: 'Baking Cocoa', calories: 86,  carbs: 11, protein: 3,  fat: 3,  maxAmount: 25 },
+            { name: 'Oat Flower',   calories: 486, carbs: 79, protein: 20, fat: 11, maxAmount: 6  },
+            { name: 'Flaxseed',     calories: 123, carbs: 7,  protein: 5,  fat: 9,  maxAmount: 18 },
+            { name: 'Olive Oil',    calories: 750, carbs: 0,  protein: 0,  fat: 85, maxAmount: 3  }
+        ];
+
+        var testGeneticSoylent = new GeneticSoylent({
+            ingredients: ingredients,
+            targetNutrients: {
+                calories: 2000,
+                carbs:    250,
+                protein:  85,
+                fat:      65
+            }
+        });
+
+    </script>
+
+</body>
+</html>
